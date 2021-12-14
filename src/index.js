@@ -19,7 +19,7 @@ const mongoose = require('mongoose');
 const { response } = require('express');
 
 
-mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/bharatesh-database?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/group1PDAM-DB?retryWrites=true&w=majority")
     .then(() => console.log('mongodb running on 27017'))
     .catch(err => console.log(err))
 

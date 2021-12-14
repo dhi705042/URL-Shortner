@@ -4,17 +4,17 @@ const redis = require("redis");
 const { promisify } = require("util");
 
 const redisClient = redis.createClient(
-    15827,
-    "redis-15827.c264.ap-south-1-1.ec2.cloud.redislabs.com",
+    16438,
+    "redis-16438.c83.us-east-1-2.ec2.cloud.redislabs.com",
     { no_ready_check: true }
   );
-  redisClient.auth("B319nmG7lHoNE5u3sDgBsQGsnWLYPzOk", function (err) {
+  redisClient.auth("jb2Zd52ix44PWQ2wnDDgNdLFeL8bMMCq", function (err) {
     if (err) throw err;
   });
   
   redisClient.on("connect", async function () {
     console.log("Connected to Redis..");
-  });
+  });     
 
 const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
 const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
@@ -120,14 +120,6 @@ const urlRedirection = async function (req, res) {
     }
 }
 
-
-//     const urlFound = await urlModel.findOne({urlCode: req.params.urlcode})
-//     if (urlFound){
-//         return res.status(302).redirect(urlFound.longUrl)
-//     } else {
-//         return res.status(404).send('No URL Found')
-//     }
-// }
 
 module.exports.createShortUrl = createShortUrl
 module.exports.urlRedirection = urlRedirection
