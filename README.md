@@ -1,67 +1,93 @@
-# radium
-Repository for backend cohort - Radium
+# Radium 
 
-10.3.2 301 Moved Permanently
+## Scalable URL Shortner Project Requirement
 
-The requested resource has been assigned a new permanent URI and any future references to this resource SHOULD use one of the returned URIs. Clients with link editing capabilities ought to automatically re-link references to the Request-URI to one or more of the new references returned by the server, where possible. This response is cacheable unless indicated otherwise.
+## Phase I
 
-The new permanent URI SHOULD be given by the Location field in the response. Unless the request method was HEAD, the entity of the
-response SHOULD contain a short hypertext note with a hyperlink to
-the new URI(s).
+## Overview
+URL shortening is used to create shorter aliases for long URLs. We call these shortened aliases “short links.” Users are redirected to the original URL when they hit these short links. Short links save a lot of space when displayed, printed, messaged, or tweeted. Additionally, users are less likely to mistype shorter URLs.
 
-If the 301 status code is received in response to a request other
-than GET or HEAD, the user agent MUST NOT automatically redirect the
-request unless it can be confirmed by the user, since this might
-change the conditions under which the request was issued.
+For example, if we shorten the following URL through TinyURL:
 
-10.3.3 302 Found
+```
+https://babeljs.io/blog/2020/10/15/7.12.0#class-static-blocks-12079httpsgithubcombabelbabelpull12079-12143httpsgithubcombabelbabelpull12143
+```
 
-The requested resource resides temporarily under a different URI.
-Since the redirection might be altered on occasion, the client SHOULD continue to use the Request-URI for future requests. This response
-is only cacheable if indicated by a Cache-Control or Expires header
-field.
+We would get:
 
-The temporary URI SHOULD be given by the Location field in the
-response. Unless the request method was HEAD, the entity of the
-response SHOULD contain a short hypertext note with a hyperlink to
-the new URI(s).
+```
+https://tinyurl.com/y4ned4ep
+```
 
-If the 302 status code is received in response to a request other
-than GET or HEAD, the user agent MUST NOT automatically redirect the
-request unless it can be confirmed by the user, since this might
-change the conditions under which the request was issued.
+The shortened URL is nearly one-fifth the size of the actual URL.
 
-10.3.4 303 See Other
+Some of the use cases for URL shortening is to optimise links shared across users, easy tracking of individual links and sometimes hiding the affiliated original URLs.
 
-The response to the request can be found under a different URI and SHOULD be retrieved using a GET method on that resource. This method
-exists primarily to allow the output of a POST-activated script to
-redirect the user agent to a selected resource. The new URI is not a
-substitute reference for the originally requested resource. The 303
-response MUST NOT be cached, but the response to the second
-(redirected) request might be cacheable.
+If you haven’t used tinyurl.com before, please try creating a new shortened URL and spend some time going through the various options their service offers. This will help you have a little context to the problem we solve through this project.
 
-The different URI SHOULD be given by the Location field in the
-response. Unless the request method was HEAD, the entity of the
-response SHOULD contain a short hypertext note with a hyperlink to
-the new URI(s).
+### Key points
+- Create a group database `groupXDatabase`. You can clean the db you previously used and reuse that.
+- This time each group should have a *single git branch*. Coordinate amongst yourselves by ensuring every next person pulls the code last pushed by a team mate. You branch will be checked as part of the demo. Branch name should follow the naming convention `project/urlShortnerGroupX`
+- Follow the naming conventions exactly as instructed. The backend code will be integrated with the front-end application which means any mismatch in the expected request body will lead to failure in successful integration.
 
-10.3.8 307 Temporary Redirect
+### Models
+- Url Model
+```
+{ urlCode: { mandatory, unique, lowercase, trim }, longUrl: {mandatory, valid url}, shortUrl: {mandatory, unique} }
+```
 
-The requested resource resides temporarily under a different URI.
-Since the redirection MAY be altered on occasion, the client SHOULD
-continue to use the Request-URI for future requests. This response
-is only cacheable if indicated by a Cache-Control or Expires header
-field.
+### POST /url/shorten
+- Create a short URL for an original url recieved in the request body.
+- The baseUrl must be the application's baseUrl. Example if the originalUrl is http://abc.com/user/images/name/2 then the shortened url should be http://localhost:3000/xyz
+- Return the shortened unique url. Refer [this](#url-shorten-response) for the response
+- Ensure the same response is returned for an original url everytime
+- Return HTTP status 400 for an invalid request
 
-The temporary URI SHOULD be given by the Location field in the
-response. Unless the request method was HEAD, the entity of the
-response SHOULD contain a short hypertext note with a hyperlink to
-the new URI(s) , since many pre-HTTP/1.1 user agents do not
-understand the 307 status. Therefore, the note SHOULD contain the
-information necessary for a user to repeat the original request on
-the new URI.
+### GET /:urlCode
+- Redirect to the original URL corresponding
+- Use a valid HTTP status code meant for a redirection scenario.
+- Return a suitable error for a url not found
+- Return HTTP status 400 for an invalid request
 
-If the 307 status code is received in response to a request other
-than GET or HEAD, the user agent MUST NOT automatically redirect the
-request unless it can be confirmed by the user, since this might
-change the conditions under which the request was issued.
+## Testing 
+- To test these apis create a new collection in Postman named Project 4 Url Shortner
+- Each api should have a new request in this collection
+- Each request in the collection should be rightly named. Eg  Url shorten, Get Url etc
+- Each member of each team should have their tests in running state
+
+## Phase II
+- Use caching while creating the shortened url to minimize db calls.
+- Implement what makes sense to you and we will build understanding over the demo discussion. 
+- Figure out if you can also use caching while redirecting to the original url from the shortedned url
+
+## Response
+
+### Successful Response structure
+```yaml
+{
+  status: true,
+  data: {
+
+  }
+}
+```
+### Error Response structure
+```yaml
+{
+  status: false,
+  message: ""
+}
+```
+## Response samples
+
+### Url shorten response
+```yaml
+{
+  "data": {
+    "longUrl": "http://www.abc.com/oneofthelongesturlseverseenbyhumans.com",
+    "shortUrl": "http://localhost:3000/ghfgfg",
+    "urlCode": "ghfgfg"
+  } 
+}
+
+```
